@@ -343,6 +343,28 @@ test_ ## testnum: \
     bne x0, TESTNUM, fail; \
 3:
 
+#define TEST_BR2_OP_TAKEN_X0_LHS(testnum, inst, val2 ) \
+test_ ## testnum: \
+    li  TESTNUM, testnum; \
+    li  x2, val2; \
+    inst x0, x2, 2f; \
+    bne x0, TESTNUM, fail; \
+1:  bne x0, TESTNUM, 3f; \
+2:  inst x0, x2, 1b; \
+    bne x0, TESTNUM, fail; \
+3:
+
+#define TEST_BR2_OP_TAKEN_X0_RHS(testnum, inst, val1 ) \
+test_ ## testnum: \
+    li  TESTNUM, testnum; \
+    li  x1, val1; \
+    inst x1, x0, 2f; \
+    bne x0, TESTNUM, fail; \
+1:  bne x0, TESTNUM, 3f; \
+2:  inst x1, x0, 1b; \
+    bne x0, TESTNUM, fail; \
+3:
+
 #define TEST_BR2_OP_NOTTAKEN( testnum, inst, val1, val2 ) \
 test_ ## testnum: \
     li  TESTNUM, testnum; \
@@ -352,6 +374,26 @@ test_ ## testnum: \
     bne x0, TESTNUM, 2f; \
 1:  bne x0, TESTNUM, fail; \
 2:  inst x1, x2, 1b; \
+3:
+
+#define TEST_BR2_OP_NOTTAKEN_X0_LHS( testnum, inst, val2 ) \
+test_ ## testnum: \
+    li  TESTNUM, testnum; \
+    li  x2, val2; \
+    inst x0, x2, 1f; \
+    bne x0, TESTNUM, 2f; \
+1:  bne x0, TESTNUM, fail; \
+2:  inst x0, x2, 1b; \
+3:
+
+#define TEST_BR2_OP_NOTTAKEN_X0_RHS( testnum, inst, val1 ) \
+test_ ## testnum: \
+    li  TESTNUM, testnum; \
+    li  x1, val1; \
+    inst x1, x0, 1f; \
+    bne x0, TESTNUM, 2f; \
+1:  bne x0, TESTNUM, fail; \
+2:  inst x1, x0, 1b; \
 3:
 
 #define TEST_BR2_SRC12_BYPASS( testnum, src1_nops, src2_nops, inst, val1, val2 ) \
