@@ -64,6 +64,30 @@ RVTEST_CODE_BEGIN
     addi x1, x1, 1; \
   )
 
+  #---------------------------
+  # Branching tests against x0
+  #---------------------------
+
+  TEST_BR2_OP_TAKEN_X0_LHS( 25, bgeu,  0 );
+  TEST_BR2_OP_TAKEN_X0_RHS( 26, bgeu,  0 );
+  TEST_BR2_OP_TAKEN_X0_RHS( 27, bgeu,  1 );
+  TEST_BR2_OP_TAKEN_X0_RHS( 28, bgeu, -1 ); 
+
+  TEST_BR2_OP_NOTTAKEN_X0_LHS( 29, bgeu, -1 );
+  TEST_BR2_OP_NOTTAKEN_X0_LHS( 30, bgeu,  1 ); 
+
+  # Test same registers should always branch
+
+  TEST_CASE( 31, x1, 1, \
+    li  x1, 1; \
+    bgeu x0, x0, 2f; \
+    addi x1, x1, 1; \
+1:  bgeu x1, x1, 3f; \
+2:  bgeu x2, x2, 1b; \
+    addi x1, x1, 1; \
+3:
+  )
+
   TEST_PASSFAIL
 
 RVTEST_CODE_END
